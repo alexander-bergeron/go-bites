@@ -1,0 +1,9 @@
+title = "config"
+[feature1]
+enable = true
+userids = [
+  "12345", "67890"
+]
+
+[feature2]
+enable = false

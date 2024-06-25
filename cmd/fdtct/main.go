@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v2"
 )
 
@@ -14,6 +15,7 @@ type TemplateType int
 const (
 	JSONTemplate TemplateType = iota
 	YAMLTemplate
+	TOMLTemplate
 	TextTemplate
 )
 
@@ -28,6 +30,12 @@ func determineTemplateType(input string) TemplateType {
 	var yamlData map[string]interface{}
 	if err := yaml.Unmarshal([]byte(input), &yamlData); err == nil {
 		return YAMLTemplate
+	}
+
+	// Try to unmarshal as TOML
+	var tomlData map[string]interface{}
+	if _, err := toml.Decode(input, &tomlData); err == nil {
+		return TOMLTemplate
 	}
 
 	// Assume it's text
@@ -60,6 +68,8 @@ func checkFile(fileName string) {
 		fmt.Println("Type: JSON Template")
 	case YAMLTemplate:
 		fmt.Println("Type: YAML Template")
+	case TOMLTemplate:
+		fmt.Println("Type: TOML Template")
 	case TextTemplate:
 		fmt.Println("Type: Text Template")
 	}
@@ -68,6 +78,7 @@ func checkFile(fileName string) {
 func main() {
 	checkFile("example.yaml")
 	checkFile("example.json")
+	checkFile("example.toml")
 	checkFile("example.txt")
 
 	jsonInput := `{"field1": "value1", "field2": 123}`
@@ -76,7 +87,13 @@ func main() {
 field1: value1
 field2: 123
 `
+	tomlInput := `
+field1 = "value1"
+field2 = 123
+`
+
 	checkFile(jsonInput)
 	checkFile(singleLineYamlInput)
 	checkFile(multiLineYamlInput)
+	checkFile(tomlInput)
 }
