@@ -1,0 +1,7 @@
+{
+	"this": "is a test",
+	"number": 14,
+	"dictionary": {
+		"list": [1, 2, 3]
+	}
+}
